@@ -1,8 +1,8 @@
 #include "minirt.h"
 
-int	main(void)
+int	main(int argc, char **argv)
 {
-	void *p = mlx_init();
-	(void)p;
-	printf("lol");
+	t_inf	*inf;
+	(void)argc;
+	inf = parse(argv[1]);
 }
