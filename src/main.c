@@ -18,8 +18,7 @@ int	main(int argc, char **argv)
 	printf("x %g y %g z %g vx %g vy %g vz %g r %d g %d b %d type %d\n", inf->figures->next->coordinates.x,inf->figures->next->coordinates.y,inf->figures->next->coordinates.z,
 		   inf->figures->next->orientation_vec.x,inf->figures->next->orientation_vec.y,inf->figures->next->orientation_vec.z,
 		   inf->figures->next->rgb.r, inf->figures->next->rgb.g, inf->figures->next->rgb.b, inf->figures->next->type);
-	printf("%g", inf->figures->next->next->cylinder_height);
-	//printf("x %g y %g z %g vx %g vy %g vz %g r %d g %d b %d type %d cyl_d %g cyl_h %g\n", inf->figures->next->next->coordinates.x,inf->figures->next->next->coordinates.y,inf->figures->next->next->coordinates.z,
-	//		inf->figures->next->next->orientation_vec.x,inf->figures->next->next->orientation_vec.y,inf->figures->next->next->next->orientation_vec.z,
-	//	   	inf->figures->next->next->rgb.r, inf->figures->next->next->rgb.g, inf->figures->next->next->rgb.b, inf->figures->next->next->type, inf->figures->next->next->cylinder_diametr, inf->figures->next->next->cylinder_height);
+	printf("x %g y %g z %g vx %g vy %g vz %g r %d g %d b %d type %d cyl_d %g cyl_h %g\n", inf->figures->next->next->coordinates.x,inf->figures->next->next->coordinates.y,inf->figures->next->next->coordinates.z,
+			inf->figures->next->next->orientation_vec.x,inf->figures->next->next->orientation_vec.y,inf->figures->next->next->orientation_vec.z,
+		   	inf->figures->next->next->rgb.r, inf->figures->next->next->rgb.g, inf->figures->next->next->rgb.b, inf->figures->next->next->type, inf->figures->next->next->cylinder_diametr, inf->figures->next->next->cylinder_height);
 }
