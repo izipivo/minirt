@@ -15,10 +15,12 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
+# include <fcntl.h>
 # include <math.h>
 
 # include "libft.h"
 # include "mlx.h"
+# include "get_next_line_bonus.h"
 
 typedef struct s_env
 {
@@ -44,7 +46,7 @@ typedef struct s_dot
 typedef struct s_ambient
 {
 	t_rgb				rgb;
-	unsigned char		ratio;
+	double				ratio;
 }t_ambient;
 
 typedef struct s_camera
@@ -89,5 +91,11 @@ typedef struct s_inf
 }t_inf;
 
 t_inf	*parse(char *filename);
+double	ft_dbatoi(char *str);
+int	ft_arrlen(char **split);
+void	ft_clean_split(char **split);
+t_rgb	set_rgb(char *str);
+t_dot	set_coordinates(char *str);
+t_figure	*ft_last_figure(t_figure *fig);
 
 # endif
