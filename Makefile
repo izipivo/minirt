@@ -15,7 +15,7 @@ RM =				rm -rf
 NAME =				minirt
 
 SRC =				main.c parser.c get_next_line_utils_bonus.c get_next_line_bonus.c\
-					utils.c utils2.c
+					utils.c utils2.c ./vector/vector_utils.c
 
 SRC_DIR =			./src/
 
@@ -39,13 +39,15 @@ LIBFT =				$(addprefix ${LIBFTDIR}, ${LIBFT_NAME})
 
 MLX_NAME =			libmlx.a
 
-MLXDIR =			./mlx/
+MLXDIR =			./mlx_linux/
 
-MLX =				$(addprefix ${MLX_NAME}, ${MLX_NAME})
+MLX =				$(addprefix ${MLXDIR}, ${MLX_NAME})
 
-INCLUDE = 			-I./mlx -I./includes -I./libft
+INCLUDE = 			-I./mlx_linux -I./includes -I./libft
 
-LIBS = 				-L./mlx/ -lmlx -lm -L./libft/ -lft -framework OpenGL -framework AppKit
+# LIBS = 				-L./mlx/ -lmlx -lm -L./libft/ -lft -framework OpenGL -framework AppKit
+
+LIBS =				-L./mlx_linux -L/usr/lib -lXext -lX11 -lm -Imlx -L./libft -lft
 
 .PHONY:				clean all fclean re
 
@@ -58,7 +60,7 @@ ${MLX}:
 					${MAKE} -C ${MLXDIR}
 
 ${NAME}:			${HEADERS} Makefile ${SOURCES}
-					${CC} ${INCLUDE} ${CFLAGS} ${SOURCES} ${LIBS} -o $@
+					${CC} ${INCLUDE} ${CFLAGS} ${SOURCES} ${LIBS} ${MLX} -o $@
 
 ${BUILDIR}:
 					mkdir -p $@
