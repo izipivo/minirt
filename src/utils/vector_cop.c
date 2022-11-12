@@ -12,53 +12,46 @@
 
 #include "minirt.h"
 
-// KEYCODES
-// LINUX
-#ifdef LINUX
-# define ESC 65307
-
-#endif
-
-// MACOS
-
-#ifdef MACOS
-
-# define ESC 53
-
-#endif
-
-static int	close_win(void *inf)
+t_dot	vec_add(t_dot vector_a, t_dot vector_b)
 {
-	ft_putstr_fd(BYE, 1);
-	exit(0);
-	(void)inf;
-	return (0);
+	t_dot	v;
+
+	v.x = vector_a.x + vector_b.x;
+	v.y = vector_a.y + vector_b.y;
+	v.z = vector_a.z + vector_b.z;
+	return (v);
 }
 
-int	key(int keycode, t_inf *inf)
+double	distance(t_dot p1, t_dot p2)
 {
-	if (keycode == ESC)
-		close_win(inf);
-	return (0);
+	double	d;
+
+	d = sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2) + pow(p2.z - p1.z, 2));
+	return (d);
 }
 
-int	main(int argc, char **argv)
+void	ft_get_normal(t_ray ray, t_dot obj_pos,
+		t_inter_point *inter_point)
 {
-	t_inf	*inf;
+	ray.direction.x *= inter_point->t;
+	ray.direction.y *= inter_point->t;
+	ray.direction.z *= inter_point->t;
+	inter_point->coord = addition_vector(&ray.origin, &ray.direction);
+	inter_point->normal = subtraction_vector(&inter_point->coord, &obj_pos);
+	normalize_vector(&inter_point->normal);
+}
 
-	if (argc < 2)
-	{
-		ft_putstr_fd("o_O?\twhere is the map?\n", 2);
-		exit(GAY);
-	}
-	inf = parse(argv[1]);
-	inf->mlx = mlx_init();
-	inf->win = mlx_new_window(inf->mlx, WIDTH, HEIGHT, "miniRT");
-	inf->img = mlx_new_image(inf->mlx, WIDTH, HEIGHT);
-	inf->addr = mlx_get_data_addr(inf->img, &inf->bpp, &inf->line_length,
-			&inf->endian);
-	ray_tracing(inf, 0, 0, (double)HEIGHT / 2);
-	mlx_key_hook(inf->win, key, &inf);
-	mlx_hook(inf->win, 17, 0, close_win, &inf);
-	mlx_loop(inf->mlx);
+t_dot	sub(t_dot a, t_dot b)
+{
+	t_dot	vect;
+
+	vect.x = a.x - b.x;
+	vect.y = a.y - b.y;
+	vect.z = a.z - b.z;
+	return (vect);
+}
+
+double	dot(t_dot a, t_dot b)
+{
+	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }

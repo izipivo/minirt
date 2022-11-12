@@ -12,53 +12,56 @@
 
 #include "minirt.h"
 
-// KEYCODES
-// LINUX
-#ifdef LINUX
-# define ESC 65307
-
-#endif
-
-// MACOS
-
-#ifdef MACOS
-
-# define ESC 53
-
-#endif
-
-static int	close_win(void *inf)
+int	ft_arrlen(char **split)
 {
-	ft_putstr_fd(BYE, 1);
-	exit(0);
-	(void)inf;
-	return (0);
+	int	i;
+
+	i = -1;
+	while (split[++i])
+		;
+	return (i);
 }
 
-int	key(int keycode, t_inf *inf)
+double	min(double a, double b)
 {
-	if (keycode == ESC)
-		close_win(inf);
-	return (0);
+	if (a <= b)
+		return (a);
+	return (b);
 }
 
-int	main(int argc, char **argv)
+double	ft_dbatoi(char *str, t_inf *inf)
 {
-	t_inf	*inf;
+	char	*frac;
+	double	frac_i;
+	char	minus;
+	int		zel;
 
-	if (argc < 2)
-	{
-		ft_putstr_fd("o_O?\twhere is the map?\n", 2);
-		exit(GAY);
-	}
-	inf = parse(argv[1]);
-	inf->mlx = mlx_init();
-	inf->win = mlx_new_window(inf->mlx, WIDTH, HEIGHT, "miniRT");
-	inf->img = mlx_new_image(inf->mlx, WIDTH, HEIGHT);
-	inf->addr = mlx_get_data_addr(inf->img, &inf->bpp, &inf->line_length,
-			&inf->endian);
-	ray_tracing(inf, 0, 0, (double)HEIGHT / 2);
-	mlx_key_hook(inf->win, key, &inf);
-	mlx_hook(inf->win, 17, 0, close_win, &inf);
-	mlx_loop(inf->mlx);
+	minus = 0;
+	if (*str == '-')
+		minus = 1;
+	zel = minus - 1;
+	while (str[++zel] && (ft_isdigit(str[zel]) || str[zel] == '.'))
+		;
+	if (str[zel])
+		free_exit(NOT_DIGIT, inf, SYNTAX_ERROR);
+	frac = ft_strchr(str, '.');
+	if (frac && (*str == '.' || frac - str == minus))
+		free_exit(WRONG_DOT, inf, SYNTAX_ERROR);
+	frac_i = 0;
+	if (frac)
+		frac_i = ((double)ft_atoi(frac + 1)) / pow(10, ft_strlen(frac + 1));
+	zel = ft_atoi(str);
+	if (!zel && minus)
+		return (-frac_i);
+	return (ft_atoi(str) + frac_i);
+}
+
+void	ft_clean_split(char **split)
+{
+	int	i;
+
+	i = -1;
+	while (split[++i])
+		free(split[i]);
+	free(split);
 }

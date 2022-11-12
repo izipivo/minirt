@@ -1,4 +1,5 @@
-CFLAGS =			-Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS =			-Wall -Wextra -Werror -D MACOS=1
+# CFLAGS =			-g -fsanitize=address -D MACOS=1
 
 HDRS =				minirt.h
 
@@ -14,8 +15,10 @@ RM =				rm -rf
 
 NAME =				minirt
 
-SRC =				main.c parser.c get_next_line_utils_bonus.c get_next_line_bonus.c\
-					utils.c utils2.c ./vector/vector_utils.c
+SRC =				main.c parser/tokens.c parser/parser.c gnl/get_next_line_utils_bonus.c gnl/get_next_line_bonus.c\
+					utils/utils.c utils/set_params.c utils/utils2.c utils/vector_cop.c utils/vector2.c utils/vector_cop2.c\
+					utils/vector.c light/ray_tracing.c light/light_computing.c\
+					light/get_color.c light/inters.c light/inters_utils.c light/reflection.c light/cyl_intersex.c
 
 SRC_DIR =			./src/
 
@@ -39,19 +42,25 @@ LIBFT =				$(addprefix ${LIBFTDIR}, ${LIBFT_NAME})
 
 MLX_NAME =			libmlx.a
 
-MLXDIR =			./mlx_linux/
+MLXDIR =			./mlx/
 
 MLX =				$(addprefix ${MLXDIR}, ${MLX_NAME})
 
-INCLUDE = 			-I./mlx_linux -I./includes -I./libft
+INCLUDE = 			-I./mlx -I./includes -I./libft
 
-# LIBS = 				-L./mlx/ -lmlx -lm -L./libft/ -lft -framework OpenGL -framework AppKit
+LIBS = 				-L./mlx/ -lmlx -lm -L./libft/ -lft -framework OpenGL -framework AppKit
 
-LIBS =				-L./mlx_linux -L/usr/lib -lXext -lX11 -lm -Imlx -L./libft -lft
+ifeq (${MAKECMDGOALS}, l)
+LIBS =				-L./libft -lft -Lmlx -L/usr/lib -Imlx -lXext -lX11 -lm
+MLXDIR =			./mlx_linux/
+CFLAGS =			-Wall -Wextra -Werror -g -fsanitize=address -D LINUX=1
+endif
 
 .PHONY:				clean all fclean re
 
 all:				${BUILDIR} ${BLDRS} ${LIBFT} ${MLX} ${NAME}
+
+l:					all
 
 ${LIBFT}:
 					${MAKE} -C ${LIBFTDIR}
@@ -89,3 +98,4 @@ fclean:				clean
 
 re:					fclean all
 
+rel:				fclean l

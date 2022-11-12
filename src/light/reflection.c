@@ -12,53 +12,40 @@
 
 #include "minirt.h"
 
-// KEYCODES
-// LINUX
-#ifdef LINUX
-# define ESC 65307
-
-#endif
-
-// MACOS
-
-#ifdef MACOS
-
-# define ESC 53
-
-#endif
-
-static int	close_win(void *inf)
+t_rgb	addition_rgb(t_rgb col1, t_rgb col2)
 {
-	ft_putstr_fd(BYE, 1);
-	exit(0);
-	(void)inf;
-	return (0);
+	t_rgb	added;
+
+	added.r = col1.r + col2.r;
+	added.g = col1.g + col2.g;
+	added.b = col1.b + col2.b;
+	return (added);
 }
 
-int	key(int keycode, t_inf *inf)
+t_dot	reflect_ray(t_dot *v1, t_dot *v2)
 {
-	if (keycode == ESC)
-		close_win(inf);
-	return (0);
+	t_dot	new;
+	t_dot	mult;
+
+	mult = multiply_vector(v2, 2 * dot_product_of_vectors(v1, v2));
+	new = subtraction_vector(&mult, v1);
+	return (new);
 }
 
-int	main(int argc, char **argv)
+void	reflection(t_rgb *rgb, t_parametrs *params,
+		t_inf *inf, char depth)
 {
-	t_inf	*inf;
+	t_dot		refl_ray;
 
-	if (argc < 2)
+	if (!depth)
 	{
-		ft_putstr_fd("o_O?\twhere is the map?\n", 2);
-		exit(GAY);
+		*rgb = params->color_without_reflection;
+		return ;
 	}
-	inf = parse(argv[1]);
-	inf->mlx = mlx_init();
-	inf->win = mlx_new_window(inf->mlx, WIDTH, HEIGHT, "miniRT");
-	inf->img = mlx_new_image(inf->mlx, WIDTH, HEIGHT);
-	inf->addr = mlx_get_data_addr(inf->img, &inf->bpp, &inf->line_length,
-			&inf->endian);
-	ray_tracing(inf, 0, 0, (double)HEIGHT / 2);
-	mlx_key_hook(inf->win, key, &inf);
-	mlx_hook(inf->win, 17, 0, close_win, &inf);
-	mlx_loop(inf->mlx);
+	refl_ray = reflect_ray(&params->view, &params->normal);
+	inf->ray = &refl_ray;
+	get_color(&params->point, rgb, --depth, inf);
+	*rgb = addition_rgb(change_color_intensity(
+				&params->color_without_reflection, 1 - 0.5),
+			change_color_intensity(rgb, 0.5));
 }

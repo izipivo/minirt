@@ -12,53 +12,47 @@
 
 #include "minirt.h"
 
-// KEYCODES
-// LINUX
-#ifdef LINUX
-# define ESC 65307
-
-#endif
-
-// MACOS
-
-#ifdef MACOS
-
-# define ESC 53
-
-#endif
-
-static int	close_win(void *inf)
+t_dot	vec_cross(t_dot *vector_a, t_dot *vector_b)
 {
-	ft_putstr_fd(BYE, 1);
-	exit(0);
-	(void)inf;
-	return (0);
+	t_dot	v;
+
+	v.x = vector_a->y * vector_b->z - vector_a->z * vector_b->y;
+	v.y = vector_a->z * vector_b->x - vector_a->x * vector_b->z;
+	v.z = vector_a->x * vector_b->y - vector_a->y * vector_b->x;
+	return (v);
 }
 
-int	key(int keycode, t_inf *inf)
+double	get_norm(t_dot vect)
 {
-	if (keycode == ESC)
-		close_win(inf);
-	return (0);
+	return (sqrt(dot(vect, vect)));
 }
 
-int	main(int argc, char **argv)
+t_dot	ft_scale(t_dot a, double b)
 {
-	t_inf	*inf;
+	a.x *= b;
+	a.y *= b;
+	a.z *= b;
+	return (a);
+}
 
-	if (argc < 2)
-	{
-		ft_putstr_fd("o_O?\twhere is the map?\n", 2);
-		exit(GAY);
-	}
-	inf = parse(argv[1]);
-	inf->mlx = mlx_init();
-	inf->win = mlx_new_window(inf->mlx, WIDTH, HEIGHT, "miniRT");
-	inf->img = mlx_new_image(inf->mlx, WIDTH, HEIGHT);
-	inf->addr = mlx_get_data_addr(inf->img, &inf->bpp, &inf->line_length,
-			&inf->endian);
-	ray_tracing(inf, 0, 0, (double)HEIGHT / 2);
-	mlx_key_hook(inf->win, key, &inf);
-	mlx_hook(inf->win, 17, 0, close_win, &inf);
-	mlx_loop(inf->mlx);
+t_dot	add(t_dot a, t_dot b)
+{
+	t_dot	vect;
+
+	vect.x = a.x + b.x;
+	vect.y = a.y + b.y;
+	vect.z = a.z + b.z;
+	return (vect);
+}
+
+t_dot	normalize(t_dot a)
+{
+	t_dot	vect;
+	double	len;
+
+	len = get_norm(a);
+	vect.x = a.x / len;
+	vect.y = a.y / len;
+	vect.z = a.z / len;
+	return (vect);
 }
